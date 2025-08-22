@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F0CE7EF52E578DA60072689B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = F0CE7EF42E578DA60072689B /* Alamofire */; };
-		F0CE7EF72E578DA60072689B /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = F0CE7EF62E578DA60072689B /* AlamofireDynamic */; };
+		F0CE7F032E57B6460072689B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = F0CE7F022E57B6460072689B /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,8 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0CE7EF52E578DA60072689B /* Alamofire in Frameworks */,
-				F0CE7EF72E578DA60072689B /* AlamofireDynamic in Frameworks */,
+				F0CE7F032E57B6460072689B /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,8 +83,7 @@
 			);
 			name = LoginProfileTestApp;
 			packageProductDependencies = (
-				F0CE7EF42E578DA60072689B /* Alamofire */,
-				F0CE7EF62E578DA60072689B /* AlamofireDynamic */,
+				F0CE7F022E57B6460072689B /* Alamofire */,
 			);
 			productName = LoginProfileTestApp;
 			productReference = F0CE7ED32E5789170072689B /* LoginProfileTestApp.app */;
@@ -117,7 +114,7 @@
 			mainGroup = F0CE7ECA2E5789170072689B;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F0CE7EF32E578DA60072689B /* XCRemoteSwiftPackageReference "Alamofire" */,
+				F0CE7F012E57B6460072689B /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F0CE7ED42E5789170072689B /* Products */;
@@ -159,12 +156,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3SG3MUV83U;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = LoginProfileTestApp/Info.plist;
+				INFOPLIST_FILE = LoginProfileTestApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -191,12 +187,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3SG3MUV83U;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = LoginProfileTestApp/Info.plist;
+				INFOPLIST_FILE = LoginProfileTestApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -359,9 +354,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F0CE7EF32E578DA60072689B /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+		F0CE7F012E57B6460072689B /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.10.2;
@@ -370,15 +365,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F0CE7EF42E578DA60072689B /* Alamofire */ = {
+		F0CE7F022E57B6460072689B /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F0CE7EF32E578DA60072689B /* XCRemoteSwiftPackageReference "Alamofire" */;
+			package = F0CE7F012E57B6460072689B /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
-		};
-		F0CE7EF62E578DA60072689B /* AlamofireDynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F0CE7EF32E578DA60072689B /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = AlamofireDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
