@@ -14,6 +14,7 @@ final class FloatingPlaceholderTextField: UITextField {
     var placeholderFont: UIFont = .systemFont(ofSize: 16)
     var floatingPlaceholderFont: UIFont = .systemFont(ofSize: 12)
     var cornerRadius: CGFloat = 16.0
+    var textFieldColor: UIColor = .appGray
     
     // Constraints
     private var placeholderCenterYConstraint: NSLayoutConstraint?
@@ -81,7 +82,7 @@ final class FloatingPlaceholderTextField: UITextField {
         borderStyle = .none
         font = placeholderFont
         tintColor = .systemGray
-        backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0)
+        backgroundColor = textFieldColor
         layer.cornerRadius = cornerRadius
         layer.masksToBounds = true
         
