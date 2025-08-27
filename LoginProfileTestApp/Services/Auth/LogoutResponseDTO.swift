@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct LogoutResponseDTO: Decodable {
+    let responseCode: Int
+    let responseMessage: String
+}
+

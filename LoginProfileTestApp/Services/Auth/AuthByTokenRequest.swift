@@ -6,3 +6,17 @@
 //
 
 import Foundation
+
+struct AuthByTokenRequest: Encodable {
+    let token: String
+}
+
+struct AuthByTokenResponse: Decodable {
+    let sessionId: String
+    let status: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case sessionId = "session_id"
+        case status
+    }
+}

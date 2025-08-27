@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+struct AuthResponseDTO: Decodable {
+    let responseCode: Int
+    let responseMessage: String
+    let data: AuthDataDTO?
+}
+
+struct AuthDataDTO: Decodable {
+    let token: String
+}
