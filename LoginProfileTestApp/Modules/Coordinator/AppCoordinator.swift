@@ -34,11 +34,13 @@ final class AppCoordinator: Coordinator {
         let sessionManager = SessionManager.shared
         let authService = AuthServiceImpl(
             tokenStorage: tokenStorage,
-            sessionManager: sessionManager
+            sessionManager: sessionManager,
+            networkMonitor: NetworkMonitor.shared
         )
         let profileService = ProfileServiceImpl(
             authService: authService,
-            tokenStorage: tokenStorage
+            tokenStorage: tokenStorage,
+            networkMonitor: NetworkMonitor.shared
         )
         
         // MARK: - init

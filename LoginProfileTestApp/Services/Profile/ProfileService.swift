@@ -16,14 +16,25 @@ final class ProfileServiceImpl: ProfileService {
     private let session: Session
     private let authService: AuthService
     private let tokenStorage: TokenStorage
+    private let networkMonitor: NetworkMonitorable
     
-    init(authService: AuthService, sessionManager: Session = SessionManager.shared.session, tokenStorage: TokenStorage) {
+    init(
+        authService: AuthService,
+        sessionManager: Session = SessionManager.shared.session,
+        tokenStorage: TokenStorage,
+        networkMonitor: NetworkMonitorable = NetworkMonitor.shared
+    ) {
         self.authService = authService
         self.session = sessionManager
         self.tokenStorage = tokenStorage
+        self.networkMonitor = networkMonitor
     }
     
     func fetchProfile() async -> Result<Profile, NetworkError> {
+        guard networkMonitor.isConnected else {
+            return .failure(.noInternetConnection)
+        }
+        
         if let url = URL(string: "https://devonservice.mileonair.com"),
            let cookies = HTTPCookieStorage.shared.cookies(for: url),
            let sessionCookie = cookies.first(where: { $0.name == "session_id" }) {
