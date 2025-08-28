@@ -14,7 +14,6 @@ final class ProfileViewModel {
     var onLogoutSuccess: (() -> Void)?
     var onShowAlert: ((AlertConfig) -> Void)?
     var onProfileLoaded: ((Profile) -> Void)?
-    var onReauthFailed: (() -> Void)?
     var onLoadingStarted: ((Bool) -> Void)?
     
     private let deviceModel = UIDevice.current.model
@@ -87,7 +86,9 @@ final class ProfileViewModel {
                     AlertAction(
                         title: "OK",
                         handler: { [weak self] in
-                            self?.onReauthFailed?()
+                            Task {
+                                await self?.logout()
+                            }
                         }
                     )
                 ]

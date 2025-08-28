@@ -159,10 +159,6 @@ class ProfileViewController: UIViewController {
             self?.update(with: profile)
         }
         
-        viewModel.onReauthFailed = { [weak self] in
-            self?.coordinator.showLogin()
-        }
-        
         viewModel.onLoadingStarted = { [weak self] isLoading in
             isLoading == true ? self?.showLoading() : self?.hideLoading()
         }
