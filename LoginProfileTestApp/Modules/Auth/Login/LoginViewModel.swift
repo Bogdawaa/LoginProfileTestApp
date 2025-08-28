@@ -58,6 +58,14 @@ final class LoginViewModel {
     
     func loginUser() async {
         guard let deviceIp = deviceIp else {
+            let alertConfig = AlertConfig(
+                title: "Ошибка",
+                message: "Проверьте интернет-соединение",
+                actions: [AlertAction(title: "Ok")]
+            )
+            await MainActor.run {
+                onShowAlert?(alertConfig)
+            }
             return
         }
         

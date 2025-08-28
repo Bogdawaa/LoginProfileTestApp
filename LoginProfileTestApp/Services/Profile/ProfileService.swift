@@ -41,7 +41,7 @@ final class ProfileServiceImpl: ProfileService {
         }
         
         let request = AF.request(
-            "https://devonservice.mileonair.com/api/v1/profile",
+            MileonairEndpoint.profile.fullURL,
             method: .get
         )
             .validate()

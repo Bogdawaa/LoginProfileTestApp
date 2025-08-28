@@ -35,7 +35,7 @@ final class AuthServiceImpl: AuthService {
     
     func login(loginInfo: AuthRequestDTO) async -> Result<AuthResponseDTO, NetworkError> {
         let request = AF.request(
-            "https://devonservice.mileonair.com/api/v1/login",
+            MileonairEndpoint.login.fullURL,
             method: .post,
             parameters: loginInfo,
             encoder: JSONParameterEncoder.default,
@@ -94,7 +94,7 @@ final class AuthServiceImpl: AuthService {
     func authByToken(authByTokenRequest: AuthByTokenRequest) async -> Result<Void, NetworkError> {
         return await withCheckedContinuation { continuation in
             sessionManager.session.request(
-                "https://devonservice.mileonair.com/api/v1/authByToken",
+                MileonairEndpoint.authByToken.fullURL,
                 method: .post,
                 parameters: authByTokenRequest,
                 encoder: JSONParameterEncoder.default,
@@ -133,7 +133,7 @@ final class AuthServiceImpl: AuthService {
     
     func logout() async -> Result<LogoutResponseDTO, NetworkError> {
         let request = sessionManager.session.request(
-            "https://devonservice.mileonair.com/api/v1/logout",
+            MileonairEndpoint.logout.fullURL,
             method: .post
         )
             .validate()
