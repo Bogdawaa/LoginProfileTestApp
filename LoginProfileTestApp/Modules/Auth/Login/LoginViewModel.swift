@@ -40,6 +40,7 @@ final class LoginViewModel {
     var didUpdateInput: (() -> Void)?
     var onShowAlert: ((AlertConfig) -> Void)?
     var onLoginSuccess: (() -> Void)?
+    var onLoadingStarted: ((Bool) -> Void)?
     
     // MARK: - Init
     init(authService: AuthService = AuthServiceImpl()) {
@@ -59,6 +60,11 @@ final class LoginViewModel {
         guard let deviceIp = deviceIp else {
             return
         }
+        
+        await MainActor.run {
+            onLoadingStarted?(true)
+        }
+        
         let deviceInfo = DeviceInfo(
             os: os,
             ipAddress: deviceIp,
@@ -80,6 +86,7 @@ final class LoginViewModel {
         print("result: \(result)")
         
         await MainActor.run {
+            onLoadingStarted?(false)
             switch result {
             case .success:
                 print("Logged in successfully")

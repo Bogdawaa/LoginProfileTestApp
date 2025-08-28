@@ -22,6 +22,22 @@ class LoginViewController: UIViewController {
         return label
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.hidesWhenStopped = true
+        indicator.color = .black
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
+    private lazy var activityOverlay: UIView = {
+        let view = UIView()
+        view.alpha = 0
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var loginTextField = FloatingPlaceholderTextField()
     private lazy var passwordTextField = FloatingPlaceholderTextField()
     private lazy var loginButton: PrimaryButton = PrimaryButton()
@@ -55,10 +71,12 @@ class LoginViewController: UIViewController {
             titleLabel,
             loginTextField,
             passwordTextField,
-            loginButton
+            loginButton,
+            activityOverlay
         ].forEach {
             view.addSubview($0)
         }
+        activityOverlay.addSubview(activityIndicator)
         setupTextFields()
         setupButton()
     }
@@ -83,7 +101,15 @@ class LoginViewController: UIViewController {
             loginButton.leadingAnchor.constraint(equalTo: loginTextField.leadingAnchor),
             loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 30),
             loginButton.trailingAnchor.constraint(equalTo: loginTextField.trailingAnchor),
-            loginButton.heightAnchor.constraint(equalToConstant: 50)
+            loginButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            activityOverlay.topAnchor.constraint(equalTo: view.topAnchor),
+            activityOverlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            activityOverlay.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            activityOverlay.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: activityOverlay.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: activityOverlay.centerYAnchor)
         ])
     }
     
@@ -113,6 +139,10 @@ class LoginViewController: UIViewController {
         
         viewModel.onShowAlert = { [weak self] config in
             self?.showAlert(config)
+        }
+        
+        viewModel.onLoadingStarted = { [weak self] isLoading in
+            isLoading == true ? self?.showLoading() : self?.hideLoading()
         }
     }
 
@@ -156,6 +186,23 @@ class LoginViewController: UIViewController {
     
     private func navigateToProfileScreen() {
         coordinator.showProfile()
+    }
+    
+    private func showLoading() {
+        view.isUserInteractionEnabled = false
+        activityIndicator.startAnimating()
+        UIView.animate(withDuration: 0.3) {
+            self.activityOverlay.alpha = 1
+        }
+    }
+    
+    private func hideLoading() {
+        view.isUserInteractionEnabled = true
+        UIView.animate(withDuration: 0.3) {
+            self.activityOverlay.alpha = 0
+        } completion: { _ in
+            self.activityIndicator.stopAnimating()
+        }
     }
     
     // MARK: - actions
