@@ -17,6 +17,7 @@ final class ProfileRowView: UIView {
         label.textColor = .appMainText
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.7
+        label.numberOfLines = 0
         label.lineBreakMode = .byTruncatingTail
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false

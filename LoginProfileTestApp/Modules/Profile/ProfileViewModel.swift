@@ -34,10 +34,11 @@ final class ProfileViewModel {
     convenience init() {
         let tokenStorage = TokenStorageImpl()
         let sessionManager = SessionManager.shared
-        let authService = AuthServiceImpl(tokenStorage: tokenStorage, sessionManager: sessionManager)
+        let authService = AuthServiceImpl(tokenStorage: tokenStorage, sessionManager: sessionManager, networkMonitor: NetworkMonitor.shared)
         let profileService = ProfileServiceImpl(
             authService: authService,
-            tokenStorage: tokenStorage
+            tokenStorage: tokenStorage,
+            networkMonitor: NetworkMonitor.shared
         )
         self.init(profileService: profileService, authService: authService)
     }

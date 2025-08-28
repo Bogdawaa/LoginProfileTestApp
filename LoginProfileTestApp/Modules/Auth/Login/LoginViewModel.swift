@@ -43,7 +43,7 @@ final class LoginViewModel {
     var onLoadingStarted: ((Bool) -> Void)?
     
     // MARK: - Init
-    init(authService: AuthService = AuthServiceImpl()) {
+    init(authService: AuthService) {
         self.authService = authService
     }
     

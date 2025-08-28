@@ -9,7 +9,6 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
-    var authServce: AuthService = AuthServiceImpl()
     var window: UIWindow?
 
 
@@ -20,7 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navigationController: UINavigationController = .init()
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
-        
         let appCoordinator: Coordinator = AppCoordinator(navigationController: navigationController)
         appCoordinator.start()
         

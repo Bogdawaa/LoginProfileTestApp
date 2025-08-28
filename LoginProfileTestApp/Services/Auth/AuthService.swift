@@ -18,6 +18,7 @@ protocol AuthService {
 final class AuthServiceImpl: AuthService {
     private let tokenStorage: TokenStorage
     private let sessionManager: SessionManager
+    private let networkMonitor: NetworkMonitorable
     
     var isAuthenticated: Bool {
         do {
@@ -28,12 +29,21 @@ final class AuthServiceImpl: AuthService {
         }
     }
     
-    init(tokenStorage: TokenStorage = TokenStorageImpl(), sessionManager: SessionManager = SessionManager.shared) {
+    init(
+        tokenStorage: TokenStorage = TokenStorageImpl(),
+        sessionManager: SessionManager = SessionManager.shared,
+        networkMonitor: NetworkMonitorable = NetworkMonitor.shared
+    ) {
         self.tokenStorage = tokenStorage
         self.sessionManager = sessionManager
+        self.networkMonitor = networkMonitor
     }
     
     func login(loginInfo: AuthRequestDTO) async -> Result<AuthResponseDTO, NetworkError> {
+        guard networkMonitor.isConnected else {
+            return .failure(.noInternetConnection)
+        }
+        
         let request = AF.request(
             MileonairEndpoint.login.fullURL,
             method: .post,

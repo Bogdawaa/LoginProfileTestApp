@@ -17,6 +17,7 @@ enum NetworkError: Error {
     case noSession
     case reauthFailed
     case authfailed
+    case noInternetConnection
     
     var description: String? {
         switch self {
@@ -38,6 +39,8 @@ enum NetworkError: Error {
             return "Ошибка обновления сессии"
         case .authfailed:
             return "Неверный логин или пароль"
+        case .noInternetConnection:
+            return "Отсутствует интернет-соединение"
         }
     }
 }
