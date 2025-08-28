@@ -1,5 +1,5 @@
 {
-  "originHash" : "11b78eba97192d19796cff581fdf69b3e65b441188b1448a1b67e5d7b825a354",
+  "originHash" : "922db6d0929c6ad80f9379f4996da83089e4a7706a9477e5009e7b4b78069651",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,6 +8,24 @@
       "state" : {
         "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
         "version" : "5.10.2"
+      }
+    },
+    {
+      "identity" : "keychainaccess",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e0c7eebc5a4465a3c4680764f26b7a61f567cdaf"
+      }
+    },
+    {
+      "identity" : "swiftip",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Samasaur1/SwiftIP.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "6c788e2d34ad93f786abaf4fbb69662a9e045276"
       }
     }
   ],

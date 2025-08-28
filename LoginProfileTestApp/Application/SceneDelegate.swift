@@ -9,15 +9,21 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+    var authServce: AuthService = AuthServiceImpl()
     var window: UIWindow?
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = LoginViewController()
         self.window = window
+        let navigationController: UINavigationController = .init()
+        window.rootViewController = navigationController
         window.makeKeyAndVisible()
+        
+        let appCoordinator: Coordinator = AppCoordinator(navigationController: navigationController)
+        appCoordinator.start()
+        
     }
 }
 

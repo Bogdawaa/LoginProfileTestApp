@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F0CE7EF52E578DA60072689B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = F0CE7EF42E578DA60072689B /* Alamofire */; };
-		F0CE7EF72E578DA60072689B /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = F0CE7EF62E578DA60072689B /* AlamofireDynamic */; };
+		F088CD262E5BD7A400664C3D /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = F088CD252E5BD7A400664C3D /* KeychainAccess */; };
+		F088CD382E5DD65D00664C3D /* SwiftIP in Frameworks */ = {isa = PBXBuildFile; productRef = F088CD372E5DD65D00664C3D /* SwiftIP */; };
+		F0CE7F032E57B6460072689B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = F0CE7F022E57B6460072689B /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,8 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0CE7EF52E578DA60072689B /* Alamofire in Frameworks */,
-				F0CE7EF72E578DA60072689B /* AlamofireDynamic in Frameworks */,
+				F088CD382E5DD65D00664C3D /* SwiftIP in Frameworks */,
+				F088CD262E5BD7A400664C3D /* KeychainAccess in Frameworks */,
+				F0CE7F032E57B6460072689B /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,8 +87,9 @@
 			);
 			name = LoginProfileTestApp;
 			packageProductDependencies = (
-				F0CE7EF42E578DA60072689B /* Alamofire */,
-				F0CE7EF62E578DA60072689B /* AlamofireDynamic */,
+				F0CE7F022E57B6460072689B /* Alamofire */,
+				F088CD252E5BD7A400664C3D /* KeychainAccess */,
+				F088CD372E5DD65D00664C3D /* SwiftIP */,
 			);
 			productName = LoginProfileTestApp;
 			productReference = F0CE7ED32E5789170072689B /* LoginProfileTestApp.app */;
@@ -117,7 +120,9 @@
 			mainGroup = F0CE7ECA2E5789170072689B;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F0CE7EF32E578DA60072689B /* XCRemoteSwiftPackageReference "Alamofire" */,
+				F0CE7F012E57B6460072689B /* XCRemoteSwiftPackageReference "Alamofire" */,
+				F088CD242E5BD7A400664C3D /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				F088CD362E5DD65D00664C3D /* XCRemoteSwiftPackageReference "SwiftIP" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F0CE7ED42E5789170072689B /* Products */;
@@ -159,12 +164,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3SG3MUV83U;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = LoginProfileTestApp/Info.plist;
+				INFOPLIST_FILE = LoginProfileTestApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -191,12 +195,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3SG3MUV83U;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = LoginProfileTestApp/Info.plist;
+				INFOPLIST_FILE = LoginProfileTestApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -359,9 +362,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F0CE7EF32E578DA60072689B /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+		F088CD242E5BD7A400664C3D /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		F088CD362E5DD65D00664C3D /* XCRemoteSwiftPackageReference "SwiftIP" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Samasaur1/SwiftIP.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		F0CE7F012E57B6460072689B /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.10.2;
@@ -370,15 +389,20 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F0CE7EF42E578DA60072689B /* Alamofire */ = {
+		F088CD252E5BD7A400664C3D /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F0CE7EF32E578DA60072689B /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
+			package = F088CD242E5BD7A400664C3D /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
-		F0CE7EF62E578DA60072689B /* AlamofireDynamic */ = {
+		F088CD372E5DD65D00664C3D /* SwiftIP */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F0CE7EF32E578DA60072689B /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = AlamofireDynamic;
+			package = F088CD362E5DD65D00664C3D /* XCRemoteSwiftPackageReference "SwiftIP" */;
+			productName = SwiftIP;
+		};
+		F0CE7F022E57B6460072689B /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F0CE7F012E57B6460072689B /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
