@@ -15,6 +15,7 @@ final class ProfileViewModel {
     var onShowAlert: ((AlertConfig) -> Void)?
     var onProfileLoaded: ((Profile) -> Void)?
     var onLoadingStarted: ((Bool) -> Void)?
+    var onShowTast: ((String) -> Void)?
     
     private let deviceModel = UIDevice.current.model
     private let osVersion = UIDevice.current.systemVersion
@@ -77,27 +78,31 @@ final class ProfileViewModel {
     }
     
     private func handleProfileError(_ error: Error) {
+        if let networkError = error as? NetworkError {
+           switch networkError {
+           case .networkError:
+               onShowTast?("Проверьте подключение к интернету")
         // если ошибка реаунтентификации - перейти на экран авторизации
-        if let networkError = error as? NetworkError,
-           case .reauthFailed = networkError {
-            let alertConfig = AlertConfig(
-                title: "Ошибка",
-                message: networkError.description,
-                actions: [
-                    AlertAction(
-                        title: "OK",
-                        handler: { [weak self] in
-                            Task {
-                                await self?.logout()
-                            }
-                        }
-                    )
-                ]
-            )
-            self.onShowAlert?(alertConfig)
-        } else {
-            let errorMessage = (error as? NetworkError)?.description ?? error.localizedDescription
-            let alertConfig = AlertConfig(
+           case .reauthFailed:
+               let alertConfig = AlertConfig(
+                   title: "Ошибка",
+                   message: networkError.description,
+                   actions: [
+                       AlertAction(
+                           title: "OK",
+                           handler: { [weak self] in
+                               Task {
+                                   await self?.logout()
+                               }
+                           }
+                       )
+                   ]
+               )
+               self.onShowAlert?(alertConfig)
+               
+           default:
+               let errorMessage = (error as? NetworkError)?.description ?? error.localizedDescription
+               let alertConfig = AlertConfig(
                 title: "Ошибка",
                 message: errorMessage,
                 actions: [
@@ -111,8 +116,9 @@ final class ProfileViewModel {
                         }
                     )
                 ]
-            )
-            self.onShowAlert?(alertConfig)
+               )
+               self.onShowAlert?(alertConfig)
+           }
         }
     }
 }

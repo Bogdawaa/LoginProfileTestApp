@@ -41,6 +41,7 @@ final class LoginViewModel {
     var onShowAlert: ((AlertConfig) -> Void)?
     var onLoginSuccess: (() -> Void)?
     var onLoadingStarted: ((Bool) -> Void)?
+    var onShowToast: ((String) -> Void)?
     
     // MARK: - Init
     init(authService: AuthService) {
@@ -58,13 +59,14 @@ final class LoginViewModel {
     
     func loginUser() async {
         guard let deviceIp = deviceIp else {
-            let alertConfig = AlertConfig(
-                title: "Ошибка",
-                message: "Проверьте интернет-соединение",
-                actions: [AlertAction(title: "Ok")]
-            )
+//            let alertConfig = AlertConfig(
+//                title: "Ошибка",
+//                message: "Проверьте интернет-соединение",
+//                actions: [AlertAction(title: "Ok")]
+//            )
             await MainActor.run {
-                onShowAlert?(alertConfig)
+//                onShowAlert?(alertConfig)
+                onShowToast?("Проверьте интернет-соединение")
             }
             return
         }
@@ -101,12 +103,20 @@ final class LoginViewModel {
                 self.onLoginSuccess?()
             case .failure(let error):
                 print("error: \(error.localizedDescription)")
-                let alertConfig = AlertConfig(
-                    title: "Ошибка",
-                    message: error.description,
-                    actions: [AlertAction(title: "OK")]
-                )
-                self.onShowAlert?(alertConfig)
+                
+                if let networkError = error as? NetworkError {
+                    switch networkError {
+                    case .noInternetConnection:
+                        onShowToast?("Проверьте интернет-соединение")
+                    default:
+                        let alertConfig = AlertConfig(
+                            title: "Ошибка",
+                            message: error.description,
+                            actions: [AlertAction(title: "OK")]
+                        )
+                        self.onShowAlert?(alertConfig)
+                    }
+                }
             }
         }
     }

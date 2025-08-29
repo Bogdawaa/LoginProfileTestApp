@@ -41,6 +41,7 @@ class LoginViewController: UIViewController {
     private lazy var loginTextField = FloatingPlaceholderTextField()
     private lazy var passwordTextField = FloatingPlaceholderTextField()
     private lazy var loginButton: PrimaryButton = PrimaryButton()
+    private lazy var toastView: ToastView = ToastView()
     
     
     // MARK: - Init
@@ -144,6 +145,10 @@ class LoginViewController: UIViewController {
         viewModel.onLoadingStarted = { [weak self] isLoading in
             isLoading == true ? self?.showLoading() : self?.hideLoading()
         }
+        
+        viewModel.onShowToast = { [weak self] message in
+            self?.showToast(message)
+        }
     }
 
     private func setupTextFields() {
@@ -203,6 +208,10 @@ class LoginViewController: UIViewController {
         } completion: { _ in
             self.activityIndicator.stopAnimating()
         }
+    }
+    
+    private func showToast(_ message: String) {
+        toastView.showToast(message: message, in: self.view)
     }
     
     // MARK: - actions
