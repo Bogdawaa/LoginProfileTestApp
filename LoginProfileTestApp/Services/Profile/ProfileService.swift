@@ -16,25 +16,18 @@ final class ProfileServiceImpl: ProfileService {
     private let session: Session
     private let authService: AuthService
     private let tokenStorage: TokenStorage
-    private let networkMonitor: NetworkMonitorable
     
     init(
         authService: AuthService,
         sessionManager: Session = SessionManager.shared.session,
         tokenStorage: TokenStorage,
-        networkMonitor: NetworkMonitorable = NetworkMonitor.shared
     ) {
         self.authService = authService
         self.session = sessionManager
         self.tokenStorage = tokenStorage
-        self.networkMonitor = networkMonitor
     }
     
     func fetchProfile() async -> Result<Profile, NetworkError> {
-        guard networkMonitor.isConnected else {
-            return .failure(.noInternetConnection)
-        }
-        
         if let url = URL(string: "https://devonservice.mileonair.com"),
            let cookies = HTTPCookieStorage.shared.cookies(for: url),
            let sessionCookie = cookies.first(where: { $0.name == "session_id" }) {
@@ -55,7 +48,7 @@ final class ProfileServiceImpl: ProfileService {
             MileonairEndpoint.profile.fullURL,
             method: .get
         )
-            .validate()
+        .validate()
        
         let response = await request.serializingDecodable(ProfileResponseDTO.self).response
         switch response.result {
@@ -71,8 +64,8 @@ final class ProfileServiceImpl: ProfileService {
             }
             return .success(Profile(from: profileResponse))
             
-        case .failure(let error):
-            return handleNetworkError(error)
+        case .failure:
+            return .failure(.noInternetConnection)
         }
     }
     
@@ -83,7 +76,7 @@ final class ProfileServiceImpl: ProfileService {
             return .failure(.noToken)
         }
         
-        let tokenRequestDTO = AuthByTokenRequest(token: token)
+        let tokenRequestDTO = AuthByTokenRequestDTO(token: token)
         let result = await authService.authByToken(authByTokenRequest: tokenRequestDTO)
         
         switch result {
@@ -101,6 +94,6 @@ final class ProfileServiceImpl: ProfileService {
            let statusCode = error.responseCode {
             return .failure(.serverError(code: statusCode, message: error.localizedDescription))
         }
-        return .failure(.networkError(error))
+        return .failure(.noInternetConnection)
     }
 }
