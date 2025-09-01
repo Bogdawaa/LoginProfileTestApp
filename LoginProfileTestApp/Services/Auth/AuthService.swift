@@ -111,6 +111,11 @@ final class AuthServiceImpl: AuthService {
                 case .success(let result):
                     print("AUTH BY TOKEN SUCCESS")
                     
+                    guard result.responseCode == 0 else {
+                        continuation.resume(returning: .failure(.noToken))
+                        return
+                    }
+                    
                     if let url = response.request?.url, let cookies = HTTPCookieStorage.shared.cookies(for: url) {
                         for cookie in cookies {
                             print("Cookie received: \(cookie.name)=\(cookie.value)")
