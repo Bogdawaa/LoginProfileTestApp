@@ -98,18 +98,16 @@ final class LoginViewModel {
             case .failure(let error):
                 print("error: \(error.localizedDescription)")
                 
-                if let networkError = error as? NetworkError {
-                    switch networkError {
-                    case .noInternetConnection:
-                        onShowToast?("Проверьте интернет-соединение")
-                    default:
-                        let alertConfig = AlertConfig(
-                            title: "Ошибка",
-                            message: error.description,
-                            actions: [AlertAction(title: "OK")]
-                        )
-                        self.onShowAlert?(alertConfig)
-                    }
+                switch error {
+                case .noInternetConnection:
+                    onShowToast?("Проверьте интернет-соединение")
+                default:
+                    let alertConfig = AlertConfig(
+                        title: "Ошибка",
+                        message: error.description,
+                        actions: [AlertAction(title: "OK")]
+                    )
+                    self.onShowAlert?(alertConfig)
                 }
             }
         }
