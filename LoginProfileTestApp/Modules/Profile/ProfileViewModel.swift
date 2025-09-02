@@ -16,10 +16,6 @@ final class ProfileViewModel {
     var onProfileLoaded: ((Profile) -> Void)?
     var onLoadingStarted: ((Bool) -> Void)?
     var onShowToast: ((String) -> Void)?
-    var onForceLogout: (() -> Void)?
-    
-    private let deviceModel = UIDevice.current.model
-    private let osVersion = UIDevice.current.systemVersion
     
     private var loadProfileTask: Task<Void, Never>?
     
