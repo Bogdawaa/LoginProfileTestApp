@@ -85,15 +85,14 @@ final class ProfileServiceImpl: ProfileService {
             return await fetchProfile()
         case .failure(let error):
             print("Re-authentication failed: \(error)")
-            return .failure(.reauthFailed)
+            switch error {
+            case .noInternetConnection, .networkError:
+                return .failure(error)
+            case .serverError(let code, let message):
+                return .failure(.serverError(code: code, message: message))
+            default:
+                return .failure(error)
+            }
         }
-    }
-    
-    private func handleNetworkError(_ error: AFError) -> Result<Profile, NetworkError> {
-        if error.isResponseValidationError,
-           let statusCode = error.responseCode {
-            return .failure(.serverError(code: statusCode, message: error.localizedDescription))
-        }
-        return .failure(.noInternetConnection)
     }
 }

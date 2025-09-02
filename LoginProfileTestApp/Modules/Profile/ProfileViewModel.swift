@@ -16,6 +16,7 @@ final class ProfileViewModel {
     var onProfileLoaded: ((Profile) -> Void)?
     var onLoadingStarted: ((Bool) -> Void)?
     var onShowToast: ((String) -> Void)?
+    var onForceLogout: (() -> Void)?
     
     private let deviceModel = UIDevice.current.model
     private let osVersion = UIDevice.current.systemVersion
@@ -106,17 +107,16 @@ final class ProfileViewModel {
         if let networkError = error as? NetworkError {
            switch networkError {
         // если ошибка реаунтентификации - перейти на экран авторизации
-           case .reauthFailed, .noToken:
+           case .serverError, .noToken:
                let alertConfig = AlertConfig(
                    title: "Ошибка",
-                   message: networkError.description,
+                   message: "Cессия истекла. Необходимо войти заново.",
                    actions: [
                        AlertAction(
                            title: "OK",
                            handler: { [weak self] in
-                               Task {
-                                   await self?.logout()
-                               }
+                               self?.clearSessionData()
+                               self?.onLogoutSuccess?()
                            }
                        )
                    ]
@@ -142,6 +142,16 @@ final class ProfileViewModel {
                )
                self.onShowAlert?(alertConfig)
            }
+        }
+    }
+    
+    private func clearSessionData() {
+        do {
+            try TokenStorageImpl().removeAuthToken()
+            SessionManager.shared.clearCookies()
+            print("Session Data cleared")
+        } catch {
+            print("Failed to clear session data: \(error)")
         }
     }
     

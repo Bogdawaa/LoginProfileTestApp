@@ -112,7 +112,9 @@ final class AuthServiceImpl: AuthService {
                     print("AUTH BY TOKEN SUCCESS")
                     
                     guard result.responseCode == 0 else {
-                        continuation.resume(returning: .failure(.noToken))
+                        continuation.resume(returning: .failure(.serverError(
+                            code: result.responseCode,
+                            message: result.responseMessage)))
                         return
                     }
                     
