@@ -225,11 +225,14 @@ class ProfileViewController: UIViewController {
     // MARK: - Actions
     @objc private func didTapLogoutButton() {
         logoutButton.isEnabled = false
+        logoutButton.configuration?.showsActivityIndicator = true
+        
         Task {
             await viewModel.logout()
             
             await MainActor.run {
                 logoutButton.isEnabled = true
+                logoutButton.configuration?.showsActivityIndicator = false
             }
         }
     }
