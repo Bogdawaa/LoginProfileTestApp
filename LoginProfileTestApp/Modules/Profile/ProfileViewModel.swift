@@ -15,40 +15,76 @@ final class ProfileViewModel {
     var onShowAlert: ((AlertConfig) -> Void)?
     var onProfileLoaded: ((Profile) -> Void)?
     var onLoadingStarted: ((Bool) -> Void)?
+    var onShowToast: ((String) -> Void)?
     
-    private let deviceModel = UIDevice.current.model
-    private let osVersion = UIDevice.current.systemVersion
+    private var loadProfileTask: Task<Void, Never>?
     
     init(
         profileService: ProfileService,
-        authService: AuthService
+        authService: AuthService,
     ) {
         self.profileService = profileService
         self.authService = authService
-        
-        Task {
-            await getProfile()
-        }
     }
     
     convenience init() {
         let tokenStorage = TokenStorageImpl()
         let sessionManager = SessionManager.shared
-        let authService = AuthServiceImpl(tokenStorage: tokenStorage, sessionManager: sessionManager, networkMonitor: NetworkMonitor.shared)
+        let authService = AuthServiceImpl(
+            tokenStorage: tokenStorage,
+            sessionManager: sessionManager,
+        )
         let profileService = ProfileServiceImpl(
             authService: authService,
             tokenStorage: tokenStorage,
-            networkMonitor: NetworkMonitor.shared
         )
         self.init(profileService: profileService, authService: authService)
     }
     
-    func getProfile() async {
+    func loadProfile() {
+        loadProfileTask?.cancel()
+        loadProfileTask = Task { await getProfile() }
+    }
+    
+    func cancelProfileLoad() {
+        loadProfileTask?.cancel()
+        loadProfileTask = nil
+    }
+    
+    func logout() async {
+        let result = await authService.logout()
+        
+        await MainActor.run {
+            switch result {
+            case .success:
+                print("Успешный логаут")
+                self.onLogoutSuccess?()
+            case .failure(let error):
+                handleProfileError(error)
+                print("Ошибка логаута: \(error.localizedDescription)")
+                
+            }
+        }
+    }
+    
+    private func getProfile() async {
+        guard !Task.isCancelled else { return }
+        
         await MainActor.run {
             onLoadingStarted?(true)
         }
         
+        guard !Task.isCancelled else {
+            await MainActor.run { onLoadingStarted?(false) }
+            return
+        }
+        
         let result = await profileService.fetchProfile()
+        
+        guard !Task.isCancelled else {
+            await MainActor.run { onLoadingStarted?(false) }
+            return
+        }
         
         await MainActor.run {
             onLoadingStarted?(false)
@@ -62,42 +98,30 @@ final class ProfileViewModel {
         }
     }
     
-    func logout() async {
-        let result = await authService.logout()
-        
-        await MainActor.run {
-            switch result {
-            case .success:
-                print("Успешный логаут")
-                self.onLogoutSuccess?()
-            case .failure(let error):
-                print("Ошибка логаута: \(error.localizedDescription)")
-            }
-        }
-    }
-    
+    @MainActor
     private func handleProfileError(_ error: Error) {
+        if let networkError = error as? NetworkError {
+           switch networkError {
         // если ошибка реаунтентификации - перейти на экран авторизации
-        if let networkError = error as? NetworkError,
-           case .reauthFailed = networkError {
-            let alertConfig = AlertConfig(
-                title: "Ошибка",
-                message: networkError.description,
-                actions: [
-                    AlertAction(
-                        title: "OK",
-                        handler: { [weak self] in
-                            Task {
-                                await self?.logout()
-                            }
-                        }
-                    )
-                ]
-            )
-            self.onShowAlert?(alertConfig)
-        } else {
-            let errorMessage = (error as? NetworkError)?.description ?? error.localizedDescription
-            let alertConfig = AlertConfig(
+           case .serverError, .noToken:
+               let alertConfig = AlertConfig(
+                   title: "Ошибка",
+                   message: "Cессия истекла. Необходимо войти заново.",
+                   actions: [
+                       AlertAction(
+                           title: "OK",
+                           handler: { [weak self] in
+                               self?.clearSessionData()
+                               self?.onLogoutSuccess?()
+                           }
+                       )
+                   ]
+               )
+               self.onShowAlert?(alertConfig)
+               
+           default:
+               let errorMessage = (error as? NetworkError)?.description ?? error.localizedDescription
+               let alertConfig = AlertConfig(
                 title: "Ошибка",
                 message: errorMessage,
                 actions: [
@@ -111,8 +135,21 @@ final class ProfileViewModel {
                         }
                     )
                 ]
-            )
-            self.onShowAlert?(alertConfig)
+               )
+               self.onShowAlert?(alertConfig)
+           }
         }
     }
+    
+    private func clearSessionData() {
+        do {
+            try TokenStorageImpl().removeAuthToken()
+            SessionManager.shared.clearCookies()
+            print("Session Data cleared")
+        } catch {
+            print("Failed to clear session data: \(error)")
+        }
+    }
+    
+    deinit { cancelProfileLoad() }
 }

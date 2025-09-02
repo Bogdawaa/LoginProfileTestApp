@@ -17,8 +17,8 @@ final class SessionManager {
         let configuration = URLSessionConfiguration.af.default
         configuration.httpShouldSetCookies = true
         configuration.httpCookieStorage = HTTPCookieStorage.shared
-        configuration.timeoutIntervalForRequest = 60
-        configuration.timeoutIntervalForResource = 60
+        configuration.timeoutIntervalForRequest = 30
+        configuration.timeoutIntervalForResource = 30
         self.session = Session(configuration: configuration)
     }
     

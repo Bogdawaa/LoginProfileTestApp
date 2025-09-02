@@ -11,14 +11,13 @@ import Alamofire
 protocol AuthService {
     var isAuthenticated: Bool { get }
     func login(loginInfo: AuthRequestDTO) async -> Result<AuthResponseDTO, NetworkError>
-    func authByToken(authByTokenRequest: AuthByTokenRequest) async -> Result<Void, NetworkError>
+    func authByToken(authByTokenRequest: AuthByTokenRequestDTO) async -> Result<Void, NetworkError>
     func logout() async -> Result<LogoutResponseDTO, NetworkError>
 }
 
 final class AuthServiceImpl: AuthService {
     private let tokenStorage: TokenStorage
     private let sessionManager: SessionManager
-    private let networkMonitor: NetworkMonitorable
     
     var isAuthenticated: Bool {
         do {
@@ -32,18 +31,12 @@ final class AuthServiceImpl: AuthService {
     init(
         tokenStorage: TokenStorage = TokenStorageImpl(),
         sessionManager: SessionManager = SessionManager.shared,
-        networkMonitor: NetworkMonitorable = NetworkMonitor.shared
     ) {
         self.tokenStorage = tokenStorage
         self.sessionManager = sessionManager
-        self.networkMonitor = networkMonitor
     }
     
     func login(loginInfo: AuthRequestDTO) async -> Result<AuthResponseDTO, NetworkError> {
-        guard networkMonitor.isConnected else {
-            return .failure(.noInternetConnection)
-        }
-        
         let request = AF.request(
             MileonairEndpoint.login.fullURL,
             method: .post,
@@ -78,7 +71,7 @@ final class AuthServiceImpl: AuthService {
                     return .failure(.networkError(error))
                 }
                 
-                let authByTokenRequest = AuthByTokenRequest(token: token)
+                let authByTokenRequest = AuthByTokenRequestDTO(token: token)
                 let authByTokenResult = await authByToken(authByTokenRequest: authByTokenRequest)
                 
                 switch authByTokenResult {
@@ -97,11 +90,11 @@ final class AuthServiceImpl: AuthService {
             if let data = response.data, let errorString = String(data: data, encoding: .utf8) {
                 print("Response data: \(errorString)")
             }
-            return .failure(.networkError(error))
+            return .failure(.noInternetConnection)
         }
     }
     
-    func authByToken(authByTokenRequest: AuthByTokenRequest) async -> Result<Void, NetworkError> {
+    func authByToken(authByTokenRequest: AuthByTokenRequestDTO) async -> Result<Void, NetworkError> {
         return await withCheckedContinuation { continuation in
             sessionManager.session.request(
                 MileonairEndpoint.authByToken.fullURL,
@@ -113,10 +106,17 @@ final class AuthServiceImpl: AuthService {
                 ]
             )
             .validate()
-            .response { response in
+            .responseDecodable(of: AuthByTokenResponseDTO.self) { response in
                 switch response.result {
-                case .success:
+                case .success(let result):
                     print("AUTH BY TOKEN SUCCESS")
+                    
+                    guard result.responseCode == 0 else {
+                        continuation.resume(returning: .failure(.serverError(
+                            code: result.responseCode,
+                            message: result.responseMessage)))
+                        return
+                    }
                     
                     if let url = response.request?.url, let cookies = HTTPCookieStorage.shared.cookies(for: url) {
                         for cookie in cookies {
@@ -134,7 +134,7 @@ final class AuthServiceImpl: AuthService {
                     if let data = response.data, let errorString = String(data: data, encoding: .utf8) {
                         print("Response data: \(errorString)")
                     }
-                    continuation.resume(returning: .failure(.networkError(error)))
+                    continuation.resume(returning: .failure(.noInternetConnection))
                 }
             }
         }
@@ -146,16 +146,9 @@ final class AuthServiceImpl: AuthService {
             MileonairEndpoint.logout.fullURL,
             method: .post
         )
-            .validate()
+        .validate()
         
         let response = await request.serializingDecodable(LogoutResponseDTO.self).response
-        
-        do {
-            try tokenStorage.removeAuthToken()
-            sessionManager.clearCookies()
-        } catch {
-            print("Failed to remove token or cookies: \(error)")
-        }
         
         switch response.result {
         case .success(let response):
@@ -166,6 +159,12 @@ final class AuthServiceImpl: AuthService {
                 return .failure(.serverError(code: response.responseCode, message: errorMessage))
             }
             
+            do {
+                try tokenStorage.removeAuthToken()
+                sessionManager.clearCookies()
+            } catch {
+                print("Failed to remove token or cookies: \(error)")
+            }
             
             return .success(response)
             
@@ -175,7 +174,7 @@ final class AuthServiceImpl: AuthService {
             if let data = response.data, let errorString = String(data: data, encoding: .utf8) {
                 print("Response data: \(errorString)")
             }
-            return .failure(.networkError(error))
+            return .failure(.noInternetConnection)
         }
     }
 }

@@ -81,6 +81,8 @@ class ProfileViewController: UIViewController {
         return view
     }()
     
+    private lazy var toastView = ToastView()
+    
     private var dataRows: [InfoType: ProfileRowView] = [:]
     
     // MARK: - Init
@@ -100,6 +102,14 @@ class ProfileViewController: UIViewController {
         createInfoRows()
         setupUI()
         setupBindings()
+        
+        viewModel.loadProfile()
+    }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewModel.cancelProfileLoad()
     }
     
     // MARK: - Private Methods
@@ -162,6 +172,10 @@ class ProfileViewController: UIViewController {
         viewModel.onLoadingStarted = { [weak self] isLoading in
             isLoading == true ? self?.showLoading() : self?.hideLoading()
         }
+        
+        viewModel.onShowToast = { [weak self] message in
+            self?.showToast(message)
+        }
     }
     
     private func showAlert(_ config: AlertConfig) {
@@ -194,6 +208,10 @@ class ProfileViewController: UIViewController {
         view.isUserInteractionEnabled = true
     }
     
+    private func showToast(_ message: String) {
+        toastView.showToast(message: message, in: self.view)
+    }
+    
     // MARK: - Public Methods
     func update(with profile: Profile) {
         dataRows[.firstName]?.updateValue(profile.firstName)
@@ -206,8 +224,16 @@ class ProfileViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func didTapLogoutButton() {
+        logoutButton.isEnabled = false
+        logoutButton.configuration?.showsActivityIndicator = true
+        
         Task {
             await viewModel.logout()
+            
+            await MainActor.run {
+                logoutButton.isEnabled = true
+                logoutButton.configuration?.showsActivityIndicator = false
+            }
         }
     }
 }
